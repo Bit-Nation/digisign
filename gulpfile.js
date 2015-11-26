@@ -1,0 +1,42 @@
+const gulp = require('gulp');
+const sass = require('gulp-sass');
+const minifyHTML = require('gulp-minify-html');
+const browserify = require('browserify');
+const babelify = require('babelify');
+const source = require('vinyl-source-stream');
+const browserSync = require('browser-sync');
+
+gulp.task('js', () => {
+  browserify('src/js/app.jsx')
+  .transform(babelify, {presets: ["es2015", "react"]})
+  .bundle()
+  .pipe(source('bundle.js'))
+  .pipe(gulp.dest('dist'));
+});
+
+gulp.task('minify-html', () => {
+
+  return gulp.src('src/index.html')
+    .pipe(minifyHTML())
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('sass', () => {
+  gulp.src('scss/styles.scss')
+  .pipe(sass({includePaths: ['scss']}))
+  .pipe(gulp.dest('css'));
+});
+
+gulp.task('browser-sync', () => {
+  browserSync.init(["src/**/*.*"], {
+    server: {
+      baseDir: "./dist"
+    }
+  });
+});
+
+gulp.task('default', ['minify-html', 'sass', 'js', 'browser-sync'], () => {
+  gulp.watch("scss/*.scss", ['sass']);
+  gulp.watch('src/**/*.jsx', ['js']);
+  gulp.watch('src/*.html', ['minify-html']);
+});

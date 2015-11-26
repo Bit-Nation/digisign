@@ -1,0 +1,36 @@
+{
+  "name": "digisign",
+  "version": "1.0.0",
+  "description": "An app to digitally sign any file.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magician11/digisign.git"
+  },
+  "author": "Andrew Golightly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/magician11/digisign/issues"
+  },
+  "homepage": "https://github.com/magician11/digisign#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-react": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browser-sync": "^2.10.0",
+    "browserify": "^12.0.1",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.0",
+    "gulp-minify-html": "^1.0.4",
+    "gulp-sass": "^2.1.0",
+    "react-dom": "^0.14.3",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "react": "^0.14.3",
+    "react-bootstrap": "^0.28.1"
+  }
+}
