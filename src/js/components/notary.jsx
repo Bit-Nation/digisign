@@ -1,49 +1,30 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col, Input, ButtonInput } from 'react-bootstrap';
-import { Form, ValidatedInput } from 'react-bootstrap-validation';
+import NotaryForm from './notary-form.jsx';
+import NotaryConfirmation from './notary-confirmation.jsx';
 
 class Notary extends Component {
 
   constructor() {
     super();
     this.state = {
-      publicKey: '',
-      secretKey: '',
-      password: '',
-      hashOfFile: ''
+      dataEntered: false
     };
   }
 
-  /* Handle the form submission */
-  /* -------------------------- */
-
-  handleValidSubmit(values) {
-    console.log('doing something...');
-    console.log(values);
-  }
-
-  handleInvalidSubmit(errors, values) {
-
-    console.log(errors)
-  }
-
-  /* Process the uploaded image */
-  /* -------------------------- */
-
-  handleFile(e) {
-    var reader = new FileReader();
-    var file = e.target.files[0];
-
-    if (!file) return;
-
-    reader.onload = function(inputFile) {
-      console.log(inputFile);
-      console.log(inputFile.target.result);
-    }.bind(this);
-    reader.readAsDataURL(file);
+  saveNotaryValues(values) {
+    this.setState({data: values, dataEntered: true});
   }
 
   render() {
+
+    let content;
+
+    if(!this.state.dataEntered) {
+      content = <NotaryForm saveNotaryValues={this.saveNotaryValues.bind(this)}/>;
+    } else {
+      content = <NotaryConfirmation data={this.state.data}/>;
+    }
     return (
       <Grid>
         <Row>
@@ -52,43 +33,7 @@ class Notary extends Component {
           </Col>
         </Row>
         <hr/>
-
-        <Form onValidSubmit={this.handleValidSubmit.bind(this)}
-          onInvalidSubmit={this.handleInvalidSubmit.bind(this)}>
-          <Row>
-            <Col md={4} mdOffset={4}>
-              <Input
-                type='file'
-                label='Upload a file to sign'
-                onChange={this.handleFile.bind(this)}
-                required
-                />
-              <ValidatedInput
-                type='text'
-                label='Your public key'
-                name='publicKey'
-                validate='required'
-                errorHelp='Please paste in your public key here'
-                />
-              <ValidatedInput
-                type='text'
-                label='Your encrypted secret key'
-                name='secretKey'
-                validate='required'
-                errorHelp='Please paste in your secret key here'
-                />
-              <ValidatedInput
-                type='password'
-                name='password'
-                label='Password'
-                help='The password that was used to encrypt your private key.'
-                errorHelp='Please enter the password you used to encrypt your secret key'
-                />
-              <ButtonInput className='center-block' type='submit' value='Sign my file' bsStyle='primary' bsSize='large'/>
-            </Col>
-          </Row>
-        </Form>
-
+        { content }
       </Grid>
     );
   }
