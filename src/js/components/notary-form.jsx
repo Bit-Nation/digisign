@@ -76,11 +76,6 @@ class NotaryForm extends Component {
             </Col>
           </Row>
         </Form>
-        <Alert>
-          <h2>Debug stuff</h2>
-          <p><strong>Example encrypted secret key:</strong> U2FsdGVkX19Ym8yWYq1hiMR39oVPrVEJ2TNCsf40IOJqaQ/1RphzhRj5GAz3ep06JUOgTyKiFkYQAdIztFJgwGwLw4uVmcI1zC8CaancK9jFlZypYxUXmY2hyUHhdBi4jfOkSDjQu45NbKjFK2t/bg==</p>
-          <p><strong>Encryped with this password:</strong> andrew</p>
-        </Alert>
       </Grid>
     );
   }

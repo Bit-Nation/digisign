@@ -29,11 +29,14 @@ class Notary extends Component {
       <Grid>
         <Row>
           <Col sm={6}>
-            <h1>Digisign<br/><small>Digitally sign any file</small></h1>
+            <img src="https://bitnation.co/wp-content/uploads/2015/08/bitnation-logo.png" />
+            <h1>Digisign<small> - Digitally sign any file</small></h1>
           </Col>
         </Row>
         <hr/>
         { content }
+        <hr />
+        <p className="text-center">App created by <a href="https://bitnation.co/">Bitnation</a></p>
       </Grid>
     );
   }

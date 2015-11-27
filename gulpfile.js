@@ -39,7 +39,7 @@ gulp.task('browser-sync', () => {
   });
 });
 
-gulp.task('default', ['minify-html', 'sass', 'js', 'browser-sync'], () => {
+gulp.task('default', ['minify-html', 'sass', 'js'], () => {
   gulp.watch("scss/*.scss", ['sass']);
   gulp.watch('src/**/*.jsx', ['js']);
   gulp.watch('src/*.html', ['minify-html']);
