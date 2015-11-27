@@ -5,12 +5,16 @@ const browserify = require('browserify');
 const babelify = require('babelify');
 const source = require('vinyl-source-stream');
 const browserSync = require('browser-sync');
+const minifyjs = require('gulp-uglify');
+const buffer = require('vinyl-buffer');
 
 gulp.task('js', () => {
   browserify('src/js/app.jsx')
   .transform(babelify, {presets: ["es2015", "react"]})
   .bundle()
   .pipe(source('bundle.js'))
+  .pipe(buffer())
+  .pipe(minifyjs())
   .pipe(gulp.dest('dist'));
 });
 

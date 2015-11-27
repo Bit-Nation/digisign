@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Input, ButtonInput } from 'react-bootstrap';
+import { Grid, Row, Col, Input, ButtonInput, Alert } from 'react-bootstrap';
 import { Form, ValidatedInput } from 'react-bootstrap-validation';
 
 class NotaryForm extends Component {
@@ -70,11 +70,17 @@ class NotaryForm extends Component {
                 name='password'
                 label='The password you used to encrypt your secret key'
                 errorHelp='Please enter the password you used to encrypt your secret key'
+                required
                 />
               <ButtonInput className='center-block' type='submit' value='Sign my file' bsStyle='primary' bsSize='large'/>
             </Col>
           </Row>
         </Form>
+        <Alert>
+          <h2>Debug stuff</h2>
+          <p><strong>Example encrypted secret key:</strong> U2FsdGVkX19Ym8yWYq1hiMR39oVPrVEJ2TNCsf40IOJqaQ/1RphzhRj5GAz3ep06JUOgTyKiFkYQAdIztFJgwGwLw4uVmcI1zC8CaancK9jFlZypYxUXmY2hyUHhdBi4jfOkSDjQu45NbKjFK2t/bg==</p>
+          <p><strong>Encryped with this password:</strong> andrew</p>
+        </Alert>
       </Grid>
     );
   }
