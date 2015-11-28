@@ -70,9 +70,25 @@ class NotaryConfirmation extends Component {
       console.log(err.message);
     }
 
-    let messageToHZ = {
-      hashOfFile: hashOfFile
-    }
+    let messageToHZ = JSON.stringify({
+      hashOfFile: hashOfFile,
+      publicKey: this.props.data.publicKey,
+      signature: signature
+    });
+
+    // send data to HZ
+    $.post( "https://bitnation.co/id/api/server-req.php", { message: encodeURIComponent(messageToHZ) }, function( data ) {
+
+      this.setState({
+        hashOfFile: hashOfFile,
+        secretKey: secretKey,
+        signature: signature,
+        dataSentToHZ: true,
+        messageToHZ: messageToHZ,
+        nhzTx: data.transaction
+      });
+
+    }.bind(this), 'json');
 
     console.log('-----------------');
     let testSecretKey = 'R5xPVATO/x3ZLTsOsKT8FrT+6zys2LVmZDjyT9vq5rW8niYKBcCmtU7jr/FMNlVtxWY9LLgUqn2HU0I2pKbD6A==';
@@ -88,12 +104,7 @@ class NotaryConfirmation extends Component {
 
 
 
-    this.setState({
-      hashOfFile: hashOfFile,
-      secretKey: secretKey,
-      signature: signature,
-      dataSentToHZ: true
-    });
+
 
     // // get user entered details
     // let certData = JSON.stringify({
@@ -113,23 +124,7 @@ class NotaryConfirmation extends Component {
     // let encryptedKeyCheck = (CryptoJS.AES.decrypt(encryptedSecretKey, this.props.data.password).toString(CryptoJS.enc.Utf8) === secretKey);
     // let verificationMessage = (signatureVerified && encryptedKeyCheck) ? 'Verified on generation' : 'Error in verification';
     //
-    // // send data to HZ
-    // $.post( "api/server-req.php", { message: encodeURIComponent(`${signature}:${publicKey}`) }, function( data ) {
-    //
-    // let verificationData = JSON.stringify({
-    // publicKey: publicKey,
-    // signature: signature,
-    // nhzTx: data.transaction
-    // });
-    //
-    // this.setState({
-    // certData: certData,
-    // verificationData: verificationData,
-    // encryptedSecretKey: encryptedSecretKey,
-    // verificationMessage: verificationMessage,
-    // dataSentToHZ: true
-    // });
-    // }.bind(this), 'json');
+
 
   }
 
@@ -157,6 +152,8 @@ class NotaryConfirmation extends Component {
             <tr><td>Signature of hash of file</td><td>{this.state.signature}</td></tr>
             <tr><td>Public key</td><td>{this.props.data.publicKey}</td></tr>
           </table>
+          {this.state.messageToHZ}
+          {this.state.nhzTx}
         </div>;
       }
       //
