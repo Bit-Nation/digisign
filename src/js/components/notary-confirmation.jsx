@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col, Alert } from 'react-bootstrap';
 import tweetnacl from 'tweetnacl';
 import CryptoJS from 'crypto-js';
 import $ from 'jquery';
@@ -26,30 +26,32 @@ class NotaryConfirmation extends Component {
     /* --------- */
 
     let hashOfFile = CryptoJS.SHA3(this.props.data.fileAsBase64).toString(CryptoJS.enc.base64); //,tweetnacl.util.encodeBase64(tweetnacl.hash(tweetnacl.util.decodeBase64(this.props.data.fileAsBase64)));
-    console.log('The hash....');
-    console.log(hashOfFile);
-    console.log('encrypted secret key...');
-    console.log(this.props.data.encryptedSecretKey);
-    console.log('password...');
-    console.log(this.props.data.password);
+    // console.log('The hash....');
+    // console.log(hashOfFile);
+    // console.log('encrypted secret key...');
+    // console.log(this.props.data.encryptedSecretKey);
+    // console.log('password...');
+    // console.log(this.props.data.password);
     let secretKey = CryptoJS.AES.decrypt(this.props.data.encryptedSecretKey, this.props.data.password).toString(CryptoJS.enc.Utf8);
-    console.log('secret key...')
-    console.log(secretKey);
+    // console.log('secret key...')
+    // console.log(secretKey);
 
     let signature = null;
     try {
-      signature = tweetnacl.util.encodeBase64(tweetnacl.sign.detached(tweetnacl.util.decodeUTF8(hashOfFile), tweetnacl.util.decodeBase64(secretKey)));
-      console.log('just created signature...');
-      console.log(signature)
+      signature = tweetnacl.sign.detached(tweetnacl.util.decodeUTF8(hashOfFile), tweetnacl.util.decodeBase64(secretKey));
+      // console.log('just created signature...');
+      // console.log(signature);
     }
     catch(err) {
       console.log(err.message);
     }
 
+    let verificationMessage = tweetnacl.sign.detached.verify(tweetnacl.util.decodeUTF8(hashOfFile), signature, tweetnacl.util.decodeBase64(this.props.data.publicKey)) ? 'Verified on creation' : 'Verification failed';
+
     let messageToHZ = JSON.stringify({
       hashOfFile: hashOfFile,
       publicKey: this.props.data.publicKey,
-      signature: signature,
+      signature: tweetnacl.util.encodeBase64(signature),
       estonianID: this.props.data.estonianID
     });
 
@@ -64,7 +66,9 @@ class NotaryConfirmation extends Component {
         signature: signature,
         dataSentToHZ: true,
         messageToHZ: messageToHZ,
-        nhzTx: data.transaction
+        nhzTx: data.transaction,
+        verificationMessage: verificationMessage,
+        timestamp: (new Date(Date.UTC(2014, 2, 22, 22, 22, 0, 0) + data.transactionJSON.timestamp * 1000)).toLocaleString()
       });
 
     }.bind(this), 'json');
@@ -132,7 +136,6 @@ class NotaryConfirmation extends Component {
         content =
         <Row className="text-center confirmation">
           <Col md={8} mdOffset={2}>
-            <img src="https://bitnation.co/wp-content/uploads/2015/08/bitnation-logo.png" />
             <h1>Digital Signature Certificate</h1>
             <p>For a file with the hash</p>
             <h4>{this.state.hashOfFile}</h4>
@@ -144,7 +147,11 @@ class NotaryConfirmation extends Component {
             <h4>{this.state.nhzTx}</h4>
             <hr/>
             <p>This completes the verification data</p>
-            <p>Date: TODO</p>
+            <Alert bsStyle="success">
+              { this.state.verificationMessage }
+            </Alert>
+            <p>Date: { this.state.timestamp }</p>
+            <p>Estonian ID # { this.props.data.estonianID }</p>
           </Col>
         </Row>;
       }

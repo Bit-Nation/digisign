@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col, Input, ButtonInput, Alert } from 'react-bootstrap';
 import { Form, ValidatedInput } from 'react-bootstrap-validation';
+import tweetnacl from 'tweetnacl';
+import CryptoJS from 'crypto-js';
 
 class NotaryForm extends Component {
 
@@ -24,7 +26,21 @@ class NotaryForm extends Component {
   }
 
   /* Process the uploaded file */
-  /* -------------------------- */
+  /* ------------------------- */
+
+  generateKeys() {
+    console.log('generating keys...');
+    let keyPair = tweetnacl.sign.keyPair();
+    let publicKey = tweetnacl.util.encodeBase64(keyPair.publicKey);
+    let secretKey = tweetnacl.util.encodeBase64(keyPair.secretKey);
+    let encryptedSecretKey = CryptoJS.AES.encrypt(secretKey, 'superfreak').toString();
+    console.log(publicKey);
+    console.log(secretKey);
+    console.log(encryptedSecretKey);
+  }
+
+  /* Process the uploaded file */
+  /* ------------------------- */
 
   handleFile(e) {
     var reader = new FileReader();
@@ -43,7 +59,6 @@ class NotaryForm extends Component {
       <Grid>
         <Row>
           <Col md={6} mdOffset={3} className="text-center">
-            <img src="https://bitnation.co/wp-content/uploads/2015/08/bitnation-logo.png" />
             <h1>Digisign<small> - Digitally sign any file</small></h1>
           </Col>
         </Row>
@@ -58,6 +73,7 @@ class NotaryForm extends Component {
                 onChange={this.handleFile.bind(this)}
                 required
                 />
+              <p>Don't have your own keys? Generate a once-off pair by clicking <a href="#" onClick={this.generateKeys} >here</a>.</p>
               <ValidatedInput
                 type='text'
                 label='Your public key'
