@@ -27,16 +27,11 @@ class Notary extends Component {
     }
     return (
       <Grid>
-        <Row>
-          <Col sm={6}>
-            <img src="https://bitnation.co/wp-content/uploads/2015/08/bitnation-logo.png" />
-            <h1>Digisign<small> - Digitally sign any file</small></h1>
-          </Col>
-        </Row>
-        <hr/>
         { content }
         <hr />
-        <p className="text-center">App created by <a href="https://bitnation.co/">Bitnation</a></p>
+        <footer>
+          <p className="text-center"><a href="https://bitnation.co/">Bitnation</a> digital signature notary service</p>
+        </footer>
       </Grid>
     );
   }

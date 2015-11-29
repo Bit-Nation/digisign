@@ -14,20 +14,6 @@ class NotaryConfirmation extends Component {
   }
 
   componentDidMount() {
-
-    // let keyPair = tweetnacl.sign.keyPair();
-    // let publicKey = tweetnacl.util.encodeBase64(keyPair.publicKey);
-    // let signature = tweetnacl.util.encodeBase64(tweetnacl.sign.detached(tweetnacl.util.decodeUTF8(certData), keyPair.secretKey));
-    // let secretKey = tweetnacl.util.encodeBase64(keyPair.secretKey);
-    // let encryptedSecretKey = CryptoJS.AES.encrypt(secretKey, this.props.data.password).toString();
-
-
-    // FOR TESTING
-    // Encrytped Secret key...
-    // IDHTML.jsx:80 U2FsdGVkX19Ym8yWYq1hiMR39oVPrVEJ2TNCsf40IOJqaQ/1RphzhRj5GAz3ep06JUOgTyKiFkYQAdIztFJgwGwLw4uVmcI1zC8CaancK9jFlZypYxUXmY2hyUHhdBi4jfOkSDjQu45NbKjFK2t/bg==
-    // IDHTML.jsx:81 Password...
-    // IDHTML.jsx:82 andrew
-
     //     Public key...
     // IDHTML.jsx:73 vJ4mCgXAprVO46/xTDZVbcVmPSy4FKp9h1NCNqSmw+g=
     // IDHTML.jsx:76 Secret key...
@@ -37,14 +23,8 @@ class NotaryConfirmation extends Component {
     // IDHTML.jsx:81 Password...
     // IDHTML.jsx:82 andrew
 
-
-    //message: tt7RKnxJOFWoLnAqS1ca0jH1vDauQTBQcKpITySWNC2yBzmkp8BElNZvcpBJ9ONj+b04sCUZocFrVgsTgD+Vmw==
-    // signature: hcKhaTMGyhBGGwIcTiHa2v5Way9F/vW5zz7Barmw+/mgwY5nG/Gs/mqnkYrp1uXv1gRwmNe+BR78tX59ujzDBw==
-
-
     /* --------- */
 
-    console.log('Sex is fun');
     let hashOfFile = CryptoJS.SHA3(this.props.data.fileAsBase64).toString(CryptoJS.enc.base64); //,tweetnacl.util.encodeBase64(tweetnacl.hash(tweetnacl.util.decodeBase64(this.props.data.fileAsBase64)));
     console.log('The hash....');
     console.log(hashOfFile);
@@ -55,10 +35,6 @@ class NotaryConfirmation extends Component {
     let secretKey = CryptoJS.AES.decrypt(this.props.data.encryptedSecretKey, this.props.data.password).toString(CryptoJS.enc.Utf8);
     console.log('secret key...')
     console.log(secretKey);
-    //console.log(tweetnacl.util.decodeUTF8(secretKey));
-    // console.log('hashoffile...')
-    // console.log('utf8');
-    // console.log(tweetnacl.util.encodeUTF8(hashOfFile));
 
     let signature = null;
     try {
@@ -73,11 +49,14 @@ class NotaryConfirmation extends Component {
     let messageToHZ = JSON.stringify({
       hashOfFile: hashOfFile,
       publicKey: this.props.data.publicKey,
-      signature: signature
+      signature: signature,
+      estonianID: this.props.data.estonianID
     });
 
     // send data to HZ
     $.post( "https://bitnation.co/id/api/server-req.php", { message: encodeURIComponent(messageToHZ) }, function( data ) {
+
+      console.log(data);
 
       this.setState({
         hashOfFile: hashOfFile,
@@ -89,6 +68,15 @@ class NotaryConfirmation extends Component {
       });
 
     }.bind(this), 'json');
+
+    // this.setState({
+    //   hashOfFile: hashOfFile,
+    //   secretKey: secretKey,
+    //   signature: signature,
+    //   dataSentToHZ: true,
+    //   messageToHZ: messageToHZ,
+    //   nhzTx: 'testing'
+    // });
 
     console.log('-----------------');
     let testSecretKey = 'R5xPVATO/x3ZLTsOsKT8FrT+6zys2LVmZDjyT9vq5rW8niYKBcCmtU7jr/FMNlVtxWY9LLgUqn2HU0I2pKbD6A==';
@@ -142,19 +130,23 @@ class NotaryConfirmation extends Component {
       }
       else {
         content =
-        <div>
-          <h1>Details</h1>
-          <table className="table">
-            <tr><td>file as base64</td><td>{this.props.data.fileAsBase64}</td></tr>
-            <tr><td>hash of file</td><td>{this.state.hashOfFile}</td></tr>
-            <tr><td>Secret key (encrypted)</td><td>{this.props.data.encryptedSecretKey}</td></tr>
-            <tr><td>Secret key (unencrypted)</td><td>{this.state.secretKey}</td></tr>
-            <tr><td>Signature of hash of file</td><td>{this.state.signature}</td></tr>
-            <tr><td>Public key</td><td>{this.props.data.publicKey}</td></tr>
-          </table>
-          {this.state.messageToHZ}
-          {this.state.nhzTx}
-        </div>;
+        <Row className="text-center confirmation">
+          <Col md={8} mdOffset={2}>
+            <img src="https://bitnation.co/wp-content/uploads/2015/08/bitnation-logo.png" />
+            <h1>Digital Signature Certificate</h1>
+            <p>For a file with the hash</p>
+            <h4>{this.state.hashOfFile}</h4>
+            <p>and the public key</p>
+            <h4>{this.props.data.publicKey}</h4>
+            <p>resulting in the legally binding digital signature</p>
+            <h4>{this.state.signature}</h4>
+            <p>and horizon blockchain timestamp</p>
+            <h4>{this.state.nhzTx}</h4>
+            <hr/>
+            <p>This completes the verification data</p>
+            <p>Date: TODO</p>
+          </Col>
+        </Row>;
       }
       //
       // if(!this.state.dataSentToHZ) {
@@ -163,6 +155,17 @@ class NotaryConfirmation extends Component {
       //   else {
       //     content = <h2>hello</h2>;
       //     }
+
+      // <table className="table">
+      //   <tr><td>file as base64</td><td>{this.props.data.fileAsBase64}</td></tr>
+      //   <tr><td>hash of file</td><td>{this.state.hashOfFile}</td></tr>
+      //   <tr><td>Secret key (encrypted)</td><td>{this.props.data.encryptedSecretKey}</td></tr>
+      //   <tr><td>Secret key (unencrypted)</td><td>{this.state.secretKey}</td></tr>
+      //   <tr><td>Signature of hash of file</td><td>{this.state.signature}</td></tr>
+      //   <tr><td>Public key</td><td>{this.props.data.publicKey}</td></tr>
+      // </table>
+      // {this.state.messageToHZ}
+      // {this.state.nhzTx}
 
       return (
         <div>

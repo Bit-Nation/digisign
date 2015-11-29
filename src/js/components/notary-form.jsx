@@ -41,6 +41,13 @@ class NotaryForm extends Component {
   render() {
     return (
       <Grid>
+        <Row>
+          <Col md={6} mdOffset={3} className="text-center">
+            <img src="https://bitnation.co/wp-content/uploads/2015/08/bitnation-logo.png" />
+            <h1>Digisign<small> - Digitally sign any file</small></h1>
+          </Col>
+        </Row>
+        <hr/>
         <Form onValidSubmit={this.handleValidSubmit.bind(this)}
           onInvalidSubmit={this.handleInvalidSubmit.bind(this)}>
           <Row>
@@ -71,6 +78,11 @@ class NotaryForm extends Component {
                 label='The password you used to encrypt your secret key'
                 errorHelp='Please enter the password you used to encrypt your secret key'
                 required
+                />
+              <ValidatedInput
+                type='text'
+                label='Document number (e-ID)'
+                name='estonianID'
                 />
               <ButtonInput className='center-block' type='submit' value='Sign my file' bsStyle='primary' bsSize='large'/>
             </Col>

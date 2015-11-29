@@ -26,9 +26,9 @@ gulp.task('minify-html', () => {
 });
 
 gulp.task('sass', () => {
-  gulp.src('scss/styles.scss')
+  gulp.src('src/styles/styles.scss')
   .pipe(sass({includePaths: ['scss']}))
-  .pipe(gulp.dest('css'));
+  .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('browser-sync', () => {
@@ -40,7 +40,7 @@ gulp.task('browser-sync', () => {
 });
 
 gulp.task('default', ['minify-html', 'sass', 'js'], () => {
-  gulp.watch("scss/*.scss", ['sass']);
+  gulp.watch("src/styles/*.scss", ['sass']);
   gulp.watch('src/**/*.jsx', ['js']);
   gulp.watch('src/*.html', ['minify-html']);
 });
