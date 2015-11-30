@@ -9,7 +9,10 @@ class NotaryForm extends Component {
   constructor() {
     super();
     this.state = {
-      fileAsBase64: null
+      fileAsBase64: null,
+      publicKey: '',
+      encryptedSecretKey: '',
+      password: ''
     };
   }
 
@@ -37,6 +40,7 @@ class NotaryForm extends Component {
     console.log(publicKey);
     console.log(secretKey);
     console.log(encryptedSecretKey);
+    this.setState({publicKey:publicKey, encryptedSecretKey: encryptedSecretKey, password: 'superfreak'});
   }
 
   /* Process the uploaded file */
@@ -73,13 +77,14 @@ class NotaryForm extends Component {
                 onChange={this.handleFile.bind(this)}
                 required
                 />
-              <p>Don't have your own keys? Generate a once-off pair by clicking <a href="#" onClick={this.generateKeys} >here</a>.</p>
+              <p>Don't have your own keys? Generate a once-off pair by clicking <a href="#" onClick={this.generateKeys.bind(this)} >here</a>.</p>
               <ValidatedInput
                 type='text'
                 label='Your public key'
                 name='publicKey'
                 validate='required'
                 errorHelp='Please paste in your public key here'
+                value={this.state.publicKey}
                 />
               <ValidatedInput
                 type='text'
@@ -87,6 +92,7 @@ class NotaryForm extends Component {
                 name='encryptedSecretKey'
                 validate='required'
                 errorHelp='Please paste in your secret key here'
+                value={this.state.encryptedSecretKey}
                 />
               <ValidatedInput
                 type='password'
@@ -94,6 +100,7 @@ class NotaryForm extends Component {
                 label='The password you used to encrypt your secret key'
                 errorHelp='Please enter the password you used to encrypt your secret key'
                 required
+                value={this.state.password}
                 />
               <ValidatedInput
                 type='text'
