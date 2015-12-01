@@ -39,8 +39,6 @@ class NotaryConfirmation extends Component {
     let signature = null;
     try {
       signature = tweetnacl.sign.detached(tweetnacl.util.decodeUTF8(hashOfFile), tweetnacl.util.decodeBase64(secretKey));
-      // console.log('just created signature...');
-      // console.log(signature);
     }
     catch(err) {
       console.log(err.message);
@@ -63,7 +61,7 @@ class NotaryConfirmation extends Component {
       this.setState({
         hashOfFile: hashOfFile,
         secretKey: secretKey,
-        signature: signature,
+        signature: tweetnacl.util.encodeBase64(signature),
         dataSentToHZ: true,
         messageToHZ: messageToHZ,
         nhzTx: data.transaction,
@@ -72,58 +70,9 @@ class NotaryConfirmation extends Component {
       });
 
     }.bind(this), 'json');
-
-    // this.setState({
-    //   hashOfFile: hashOfFile,
-    //   secretKey: secretKey,
-    //   signature: signature,
-    //   dataSentToHZ: true,
-    //   messageToHZ: messageToHZ,
-    //   nhzTx: 'testing'
-    // });
-
-    console.log('-----------------');
-    let testSecretKey = 'R5xPVATO/x3ZLTsOsKT8FrT+6zys2LVmZDjyT9vq5rW8niYKBcCmtU7jr/FMNlVtxWY9LLgUqn2HU0I2pKbD6A==';
-    let testHash = 'w9NTXK7lO1uDhVVdxNmeNnqV2XLu5cJhO5cO/BTCVmE8NmmX3+VCYzJNXPH6dIVj5ZtDnlYzwSmh1h6FK+pWYQ==';
-    console.log('test signature...');
-    console.log(tweetnacl.util.encodeBase64(tweetnacl.sign(tweetnacl.util.decodeBase64(testHash), tweetnacl.util.decodeBase64(testSecretKey))));
-    //     secret key...
-    // bundle.js:21 R5xPVATO/x3ZLTsOsKT8FrT+6zys2LVmZDjyT9vq5rW8niYKBcCmtU7jr/FMNlVtxWY9LLgUqn2HU0I2pKbD6A==
-    // bundle.js:21 hashoffile...
-    // bundle.js:21 RRKRbsC8yfisV4SmiPkN3QHTs5m+6KeZ0COAbIWSaMFoqbwnX/YN5ottIwrTVQM4Nb279a2c7dhIU/L3IJFXJQ==
-    // bundle.js:21 just created signature...
-    // bundle.js:21 asf4A6D4iQlQP/WcYe36jFyE1b/MHTHo/EdZYiRvhVyJl8JU/mbjlVVYJZWYCiVBRaf4TxMTMd1TFVm4svu7Cw==
-
-
-
-
-
-    // // get user entered details
-    // let certData = JSON.stringify({
-    // name: this.props.data.name,
-    // dateOfBirth: this.props.data.dob,
-    // height: this.props.data.height + 'cm',
-    // witness1: this.props.data.witness1,
-    // witness2: this.props.data.witness2,
-    // imageHash: tweetnacl.util.encodeBase64(tweetnacl.hash(tweetnacl.util.decodeBase64(this.props.data.image.split(',')[1])))
-    // });
-    //
-    // // do the encryption
-
-    //
-    // // verifying signature and encrypted key
-    // let signatureVerified = tweetnacl.sign.detached.verify(tweetnacl.util.decodeUTF8(certData), tweetnacl.util.decodeBase64(signature), tweetnacl.util.decodeBase64(publicKey));
-    // let encryptedKeyCheck = (CryptoJS.AES.decrypt(encryptedSecretKey, this.props.data.password).toString(CryptoJS.enc.Utf8) === secretKey);
-    // let verificationMessage = (signatureVerified && encryptedKeyCheck) ? 'Verified on generation' : 'Error in verification';
-    //
-
-
   }
 
   render() {
-
-    // console.log('state..');
-    // console.log(this.state);
 
     var content;
 
@@ -155,24 +104,6 @@ class NotaryConfirmation extends Component {
           </Col>
         </Row>;
       }
-      //
-      // if(!this.state.dataSentToHZ) {
-      //   content = <h3 className="text-center"><i className="fa fa-spin fa-3x fa-cog"></i><br/>Generating ID...</h3>;
-      //   }
-      //   else {
-      //     content = <h2>hello</h2>;
-      //     }
-
-      // <table className="table">
-      //   <tr><td>file as base64</td><td>{this.props.data.fileAsBase64}</td></tr>
-      //   <tr><td>hash of file</td><td>{this.state.hashOfFile}</td></tr>
-      //   <tr><td>Secret key (encrypted)</td><td>{this.props.data.encryptedSecretKey}</td></tr>
-      //   <tr><td>Secret key (unencrypted)</td><td>{this.state.secretKey}</td></tr>
-      //   <tr><td>Signature of hash of file</td><td>{this.state.signature}</td></tr>
-      //   <tr><td>Public key</td><td>{this.props.data.publicKey}</td></tr>
-      // </table>
-      // {this.state.messageToHZ}
-      // {this.state.nhzTx}
 
       return (
         <div>

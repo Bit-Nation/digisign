@@ -16,6 +16,11 @@ class NotaryForm extends Component {
     };
   }
 
+  handleChange(e) {
+    var nextState = {};
+    nextState[e.target.name] = e.target.value;
+    this.setState(nextState);
+  }
   /* Handle the form submission */
   /* -------------------------- */
 
@@ -85,6 +90,7 @@ class NotaryForm extends Component {
                 validate='required'
                 errorHelp='Please paste in your public key here'
                 value={this.state.publicKey}
+                onChange={this.handleChange.bind(this)}
                 />
               <ValidatedInput
                 type='text'
@@ -93,6 +99,7 @@ class NotaryForm extends Component {
                 validate='required'
                 errorHelp='Please paste in your secret key here'
                 value={this.state.encryptedSecretKey}
+                onChange={this.handleChange.bind(this)}
                 />
               <ValidatedInput
                 type='password'
@@ -101,6 +108,7 @@ class NotaryForm extends Component {
                 errorHelp='Please enter the password you used to encrypt your secret key'
                 required
                 value={this.state.password}
+                onChange={this.handleChange.bind(this)}
                 />
               <ValidatedInput
                 type='text'
