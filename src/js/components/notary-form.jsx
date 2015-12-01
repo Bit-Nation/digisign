@@ -68,7 +68,8 @@ class NotaryForm extends Component {
       <Grid>
         <Row>
           <Col md={6} mdOffset={3} className="text-center">
-            <h1>Digisign<small> - Digitally sign any file</small></h1>
+            <h1>Public Notary</h1>
+            <h4><small>Sign and Timestamp Your Contracts Into The Blockchain - A Distributed Immutable Ledger</small></h4>
           </Col>
         </Row>
         <hr/>
@@ -78,7 +79,8 @@ class NotaryForm extends Component {
             <Col md={6} mdOffset={3}>
               <Input
                 type='file'
-                label='Upload a file to sign'
+                label='Upload a file to sign (PDF or JPEG)'
+                accept='.jpg,.pdf,.jpeg'
                 onChange={this.handleFile.bind(this)}
                 required
                 />
@@ -112,7 +114,7 @@ class NotaryForm extends Component {
                 />
               <ValidatedInput
                 type='text'
-                label='Document number (e-ID)'
+                label='Estonian e-Resident number (optional)'
                 name='estonianID'
                 />
               <ButtonInput className='center-block' type='submit' value='Sign my file' bsStyle='primary' bsSize='large'/>

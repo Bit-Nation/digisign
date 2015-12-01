@@ -54,7 +54,7 @@ class NotaryConfirmation extends Component {
     });
 
     // send data to HZ
-    $.post( "https://bitnation.co/id/api/server-req.php", { message: encodeURIComponent(messageToHZ) }, function( data ) {
+    $.post( "api/server-req.php", { message: encodeURIComponent(messageToHZ) }, function( data ) {
 
       console.log(data);
 
