@@ -37,14 +37,14 @@ class NotaryForm extends Component {
   /* ------------------------- */
 
   generateKeys() {
-    console.log('generating keys...');
+    // console.log('generating keys...');
     let keyPair = tweetnacl.sign.keyPair();
     let publicKey = tweetnacl.util.encodeBase64(keyPair.publicKey);
     let secretKey = tweetnacl.util.encodeBase64(keyPair.secretKey);
     let encryptedSecretKey = CryptoJS.AES.encrypt(secretKey, 'superfreak').toString();
-    console.log(publicKey);
-    console.log(secretKey);
-    console.log(encryptedSecretKey);
+    // console.log(publicKey);
+    // console.log(secretKey);
+    // console.log(encryptedSecretKey);
     this.setState({publicKey:publicKey, encryptedSecretKey: encryptedSecretKey, password: 'superfreak'});
   }
 

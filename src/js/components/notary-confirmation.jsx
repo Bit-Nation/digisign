@@ -9,7 +9,8 @@ class NotaryConfirmation extends Component {
   constructor() {
     super();
     this.state = {
-      dataSentToHZ: false
+      dataSentToHZ: false,
+      error: null
     };
   }
 
@@ -25,26 +26,19 @@ class NotaryConfirmation extends Component {
 
     /* --------- */
 
-    let hashOfFile = CryptoJS.SHA3(this.props.data.fileAsBase64).toString(CryptoJS.enc.base64); //,tweetnacl.util.encodeBase64(tweetnacl.hash(tweetnacl.util.decodeBase64(this.props.data.fileAsBase64)));
-    // console.log('The hash....');
-    // console.log(hashOfFile);
-    // console.log('encrypted secret key...');
-    // console.log(this.props.data.encryptedSecretKey);
-    // console.log('password...');
-    // console.log(this.props.data.password);
-    let secretKey = CryptoJS.AES.decrypt(this.props.data.encryptedSecretKey, this.props.data.password).toString(CryptoJS.enc.Utf8);
-    // console.log('secret key...')
-    // console.log(secretKey);
-
-    let signature = null;
+    let signature, hashOfFile, secretKey, verificationMessage;
     try {
+      hashOfFile = CryptoJS.SHA3(this.props.data.fileAsBase64).toString(CryptoJS.enc.base64); //,tweetnacl.util.encodeBase64(tweetnacl.hash(tweetnacl.util.decodeBase64(this.props.data.fileAsBase64)));
+      secretKey = CryptoJS.AES.decrypt(this.props.data.encryptedSecretKey, this.props.data.password).toString(CryptoJS.enc.Utf8);
       signature = tweetnacl.sign.detached(tweetnacl.util.decodeUTF8(hashOfFile), tweetnacl.util.decodeBase64(secretKey));
+      verificationMessage = tweetnacl.sign.detached.verify(tweetnacl.util.decodeUTF8(hashOfFile), signature, tweetnacl.util.decodeBase64(this.props.data.publicKey)) ? 'Verified on creation' : 'Verification failed';
     }
     catch(err) {
+      console.log('Error occurred.....');
       console.log(err.message);
+      this.setState({error: err.toString()});
+      return;
     }
-
-    let verificationMessage = tweetnacl.sign.detached.verify(tweetnacl.util.decodeUTF8(hashOfFile), signature, tweetnacl.util.decodeBase64(this.props.data.publicKey)) ? 'Verified on creation' : 'Verification failed';
 
     let messageToHZ = JSON.stringify({
       hashOfFile: hashOfFile,
@@ -76,8 +70,12 @@ class NotaryConfirmation extends Component {
 
     var content;
 
-    if(this.state.signature === null) {
-      content = <h3>Problem decrypting encrypted secret key with your password. Please refresh and try again.</h3>
+    if(this.state.error !== null) {
+      content = <Alert bsStyle="danger" className="text-center">
+        <p>Looks like there was an issue in decrypting your encrypted key with your password.</p>
+        <h4>{this.state.error}</h4>
+        <p>Please check your password and keys, refresh and try again.</p>
+      </Alert>;
     } else if(!this.state.dataSentToHZ) {
       content = <h3 className="text-center"><i className="fa fa-spin fa-3x fa-cog"></i><br/>Generating signature...</h3>;
       }
