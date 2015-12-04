@@ -66,13 +66,6 @@ class NotaryForm extends Component {
   render() {
     return (
       <Grid>
-        <Row>
-          <Col md={6} mdOffset={3} className="text-center">
-            <h1>Public Notary</h1>
-            <h4><small>Sign and Timestamp Your Contracts Into The Blockchain - A Distributed Immutable Ledger</small></h4>
-          </Col>
-        </Row>
-        <hr/>
         <Form onValidSubmit={this.handleValidSubmit.bind(this)}
           onInvalidSubmit={this.handleInvalidSubmit.bind(this)}>
           <Row>

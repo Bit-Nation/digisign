@@ -34,8 +34,6 @@ class NotaryConfirmation extends Component {
       verificationMessage = tweetnacl.sign.detached.verify(tweetnacl.util.decodeUTF8(hashOfFile), signature, tweetnacl.util.decodeBase64(this.props.data.publicKey)) ? 'Verified on creation' : 'Verification failed';
     }
     catch(err) {
-      console.log('Error occurred.....');
-      console.log(err.message);
       this.setState({error: err.toString()});
       return;
     }

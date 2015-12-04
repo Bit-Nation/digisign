@@ -27,11 +27,6 @@ class Notary extends Component {
     }
     return (
       <Grid>
-        <Row>
-          <Col md={6} mdOffset={3} className="text-center">
-            <img src="https://bitnation.co/wp-content/uploads/2015/08/bitnation-logo.png" />
-          </Col>
-        </Row>
         { content }
         <hr />
         <footer>
