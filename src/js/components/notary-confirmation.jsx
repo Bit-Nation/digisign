@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Alert } from 'react-bootstrap';
+import { Grid, Row, Col, Alert, Button } from 'react-bootstrap';
 import tweetnacl from 'tweetnacl';
 import CryptoJS from 'crypto-js';
+import JSZip from 'jszip';
+import 'filesaverjs';
 import $ from 'jquery';
 
 class NotaryConfirmation extends Component {
@@ -46,22 +48,32 @@ class NotaryConfirmation extends Component {
     });
 
     // send data to HZ
-    $.post( "https://bitnation.co/notary/api/server-req.php", { message: encodeURIComponent(messageToHZ) }, function( data ) {
+    //$.post( "https://bitnation.co/notary/api/server-req.php", { message: encodeURIComponent(messageToHZ) }, function( data ) {
 
-      console.log(data);
+    //console.log(data);
 
-      this.setState({
-        hashOfFile: hashOfFile,
-        secretKey: secretKey,
-        signature: tweetnacl.util.encodeBase64(signature),
-        dataSentToHZ: true,
-        messageToHZ: messageToHZ,
-        nhzTx: data.transaction,
-        verificationMessage: verificationMessage,
-        timestamp: (new Date(Date.UTC(2014, 2, 22, 22, 22, 0, 0) + data.transactionJSON.timestamp * 1000)).toLocaleString()
-      });
+    this.setState({
+      hashOfFile: hashOfFile,
+      secretKey: secretKey,
+      signature: tweetnacl.util.encodeBase64(signature),
+      dataSentToHZ: true,
+      messageToHZ: messageToHZ,
+      //nhzTx: data.transaction,
+      nhzTx: 12341234543,
+      verificationMessage: verificationMessage,
+      timestamp: 'today'
+      //timestamp: (new Date(Date.UTC(2014, 2, 22, 22, 22, 0, 0) + data.transactionJSON.timestamp * 1000)).toLocaleString()
+    });
 
-    }.bind(this), 'json');
+    //  }.bind(this), 'json');
+  }
+
+  downloadZippedFiles() {
+
+    var zip = new JSZip();
+    zip.file("leah.txt", "I'm so cute because I'm Leah :)\n");
+    var content = zip.generate({type:"blob"});
+    saveAs(content, "sexy-leah.zip");
   }
 
   render() {
@@ -97,6 +109,7 @@ class NotaryConfirmation extends Component {
             </Alert>
             <p>Date: { this.state.timestamp }</p>
             <p>Estonian ID # { this.props.data.estonianID }</p>
+            <Button bsStyle="success" bsSize="large" onClick={this.downloadZippedFiles}>Download Files</Button>
           </Col>
         </Row>;
       }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Row, Col, Input, ButtonInput, Alert } from 'react-bootstrap';
 import { Form, ValidatedInput } from 'react-bootstrap-validation';
 import tweetnacl from 'tweetnacl';
-import CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';;
 
 class NotaryForm extends Component {
 
