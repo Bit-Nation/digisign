@@ -1,5 +1,10 @@
+/*
+This component saves the data entered and conditionally displays
+either the form or the confirmation screen.
+*/
+
 import React, { Component } from 'react';
-import { Grid, Row, Col, Input, ButtonInput } from 'react-bootstrap';
+import { Grid } from 'react-bootstrap';
 import NotaryForm from './notary-form.jsx';
 import NotaryConfirmation from './notary-confirmation.jsx';
 
@@ -13,17 +18,16 @@ class Notary extends Component {
   }
 
   saveNotaryValues(values) {
-    this.setState({data: values, dataEntered: true});
+    this.setState({ data: values, dataEntered: true });
   }
 
   render() {
-
     let content;
 
-    if(!this.state.dataEntered) {
-      content = <NotaryForm saveNotaryValues={this.saveNotaryValues.bind(this)}/>;
+    if (!this.state.dataEntered) {
+      content = <NotaryForm saveNotaryValues={ this.saveNotaryValues.bind(this) } />;
     } else {
-      content = <NotaryConfirmation data={this.state.data}/>;
+      content = <NotaryConfirmation data={this.state.data} />;
     }
     return (
       <Grid>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Alert, Button } from 'react-bootstrap';
+import { Row, Col, Alert, Button } from 'react-bootstrap';
 import tweetnacl from 'tweetnacl';
 import CryptoJS from 'crypto-js';
 import JSZip from 'jszip';
 import 'filesaverjs';
-import $ from 'jquery';
+// import $ from 'jquery';
 
 class NotaryConfirmation extends Component {
 
@@ -28,9 +28,15 @@ class NotaryConfirmation extends Component {
 
     /* --------- */
 
-    let signature, hashOfFile, secretKey, verificationMessage;
+    console.log('All prop data');
+    console.log(this.props.data);
+
+    let signature;
+    let hashOfFile;
+    let secretKey;
+    let verificationMessage;
     try {
-      hashOfFile = CryptoJS.SHA3(this.props.data.fileAsBase64).toString(CryptoJS.enc.base64); //,tweetnacl.util.encodeBase64(tweetnacl.hash(tweetnacl.util.decodeBase64(this.props.data.fileAsBase64)));
+      hashOfFile = CryptoJS.SHA3(this.props.data.fileAsBase64).toString(CryptoJS.enc.base64);
       secretKey = CryptoJS.AES.decrypt(this.props.data.encryptedSecretKey, this.props.data.password).toString(CryptoJS.enc.Utf8);
       signature = tweetnacl.sign.detached(tweetnacl.util.decodeUTF8(hashOfFile), tweetnacl.util.decodeBase64(secretKey));
       verificationMessage = tweetnacl.sign.detached.verify(tweetnacl.util.decodeUTF8(hashOfFile), signature, tweetnacl.util.decodeBase64(this.props.data.publicKey)) ? 'Verified on creation' : 'Verification failed';
@@ -69,49 +75,55 @@ class NotaryConfirmation extends Component {
   }
 
   downloadZippedFiles() {
-
-    var zip = new JSZip();
-    zip.file("leah.txt", "I'm so cute because I'm Leah :)\n");
-    var content = zip.generate({type:"blob"});
-    saveAs(content, "sexy-leah.zip");
+    const zip = new JSZip();
+    zip.file(this.props.data.inputFilename, atob(this.props.data.fileAsBase64), { base64: true });
+    const content = zip.generate({ type: 'blob' });
+    saveAs(content, "bitnation-notary-service.zip");
   }
 
   render() {
+    let content;
 
-    var content;
-
-    if(this.state.error !== null) {
-      content = <Alert bsStyle="danger" className="text-center">
-        <p>Looks like there was an issue in decrypting your encrypted key with your password.</p>
-        <h4>{this.state.error}</h4>
-        <p>Please check your password and keys, refresh and try again.</p>
-      </Alert>;
-    } else if(!this.state.dataSentToHZ) {
+    if (this.state.error !== null) {
+      content = (
+        <Alert bsStyle="danger" className="text-center">
+          <p>Looks like there was an issue in decrypting your encrypted key with your password.</p>
+          <h4>{this.state.error}</h4>
+          <p>Please check your password and keys, refresh and try again.</p>
+        </Alert>
+      );
+    } else if (!this.state.dataSentToHZ) {
       content = <h3 className="text-center"><i className="fa fa-spin fa-3x fa-cog"></i><br/>Generating signature...</h3>;
-      }
-      else {
-        content =
-        <Row className="text-center confirmation">
-          <Col md={8} mdOffset={2}>
-            <h1>Digital Signature Certificate</h1>
-            <p>For a file with the hash</p>
-            <h4>{this.state.hashOfFile}</h4>
-            <p>and the public key</p>
-            <h4>{this.props.data.publicKey}</h4>
-            <p>resulting in the legally binding digital signature</p>
-            <h4>{this.state.signature}</h4>
-            <p>and horizon blockchain timestamp</p>
-            <h4>{this.state.nhzTx}</h4>
-            <hr/>
-            <p>This completes the verification data</p>
-            <Alert bsStyle="success">
-              { this.state.verificationMessage }
-            </Alert>
-            <p>Date: { this.state.timestamp }</p>
-            <p>Estonian ID # { this.props.data.estonianID }</p>
-            <Button bsStyle="success" bsSize="large" onClick={this.downloadZippedFiles}>Download Files</Button>
-          </Col>
-        </Row>;
+      } else {
+        content = (
+          <Row className="text-center confirmation">
+            <Col md={8} mdOffset={2}>
+              <h1>Digital Signature Certificate</h1>
+              <p>For a file with the hash</p>
+              <h4>{this.state.hashOfFile}</h4>
+              <p>and the public key</p>
+              <h4>{this.props.data.publicKey}</h4>
+              <p>resulting in the legally binding digital signature</p>
+              <h4>{this.state.signature}</h4>
+              <p>and horizon blockchain timestamp</p>
+              <h4>{this.state.nhzTx}</h4>
+              <hr />
+              <p>This completes the verification data</p>
+              <Alert bsStyle="success">
+                { this.state.verificationMessage }
+              </Alert>
+              <p>Date: { this.state.timestamp }</p>
+              <p>Estonian ID # { this.props.data.estonianID }</p>
+              <Button
+                bsStyle="success"
+                bsSize="large"
+                onClick={this.downloadZippedFiles.bind(this)}
+                >
+                Download Files
+              </Button>
+            </Col>
+          </Row>
+        );
       }
 
       return (

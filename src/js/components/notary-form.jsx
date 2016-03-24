@@ -1,32 +1,35 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Input, ButtonInput, Alert } from 'react-bootstrap';
+import { Grid, Row, Col, Input, ButtonInput } from 'react-bootstrap';
 import { Form, ValidatedInput } from 'react-bootstrap-validation';
 import tweetnacl from 'tweetnacl';
-import CryptoJS from 'crypto-js';;
+import CryptoJS from 'crypto-js';
 
 class NotaryForm extends Component {
 
   constructor() {
     super();
     this.state = {
-      fileAsBase64: null,
       publicKey: '',
       encryptedSecretKey: '',
       password: ''
     };
+
+    this.fileObject = {};
   }
 
+  // handle the change for every input field (controlled components)
   handleChange(e) {
-    var nextState = {};
+    let nextState = {};
     nextState[e.target.name] = e.target.value;
     this.setState(nextState);
   }
+
   /* Handle the form submission */
   /* -------------------------- */
 
   handleValidSubmit(values) {
-    values['fileAsBase64'] = this.state.fileAsBase64;
-    this.props.saveNotaryValues(values);
+    // values['fileAsBase64'] = this.state.fileAsBase64;
+    this.props.saveNotaryValues(Object.assign({}, values, this.fileObject));
   }
 
   handleInvalidSubmit(errors, values) {
@@ -38,29 +41,32 @@ class NotaryForm extends Component {
 
   generateKeys() {
     // console.log('generating keys...');
-    let keyPair = tweetnacl.sign.keyPair();
-    let publicKey = tweetnacl.util.encodeBase64(keyPair.publicKey);
-    let secretKey = tweetnacl.util.encodeBase64(keyPair.secretKey);
-    let encryptedSecretKey = CryptoJS.AES.encrypt(secretKey, 'superfreak').toString();
+    const keyPair = tweetnacl.sign.keyPair();
+    const publicKey = tweetnacl.util.encodeBase64(keyPair.publicKey);
+    const secretKey = tweetnacl.util.encodeBase64(keyPair.secretKey);
+    const encryptedSecretKey = CryptoJS.AES.encrypt(secretKey, 'superfreak').toString();
     // console.log(publicKey);
     // console.log(secretKey);
     // console.log(encryptedSecretKey);
-    this.setState({publicKey:publicKey, encryptedSecretKey: encryptedSecretKey, password: 'superfreak'});
+    this.setState({ publicKey: publicKey, encryptedSecretKey: encryptedSecretKey, password: 'superfreak' });
   }
 
   /* Process the uploaded file */
   /* ------------------------- */
 
   handleFile(e) {
-    var reader = new FileReader();
-    var file = e.target.files[0];
+    const reader = new FileReader();
+    const uploadedFile = e.target.files[0];
 
-    if (!file) return;
+    if (!uploadedFile) return;
 
     reader.onload = function(inputFile) {
-      this.state.fileAsBase64 = inputFile.target.result;
+      this.fileObject = {
+        fileAsBase64: inputFile.target.result,
+        inputFilename: uploadedFile.name
+      };
     }.bind(this);
-    reader.readAsDataURL(file);
+    reader.readAsArrayBuffer(uploadedFile);
   }
 
   render() {
