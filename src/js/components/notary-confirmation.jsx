@@ -76,7 +76,7 @@ class NotaryConfirmation extends Component {
 
   downloadZippedFiles() {
     const zip = new JSZip();
-    zip.file(this.props.data.inputFilename, atob(this.props.data.fileAsBase64), { base64: true });
+    zip.file(this.props.data.inputFilename, this.props.data.fileAsBase64, { base64: true });
     const content = zip.generate({ type: 'blob' });
     saveAs(content, "bitnation-notary-service.zip");
   }
